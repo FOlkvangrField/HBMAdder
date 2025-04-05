@@ -12,7 +12,7 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStoppingEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import ventivu.core.Core.Commands;
+import ventivu.core.Core.Commands.CommandReload;
 
 @Mod(modid = HBMAddon.MODID, name = HBMAddon.MODNAME, version = HBMAddon.VERSION, dependencies = "required-after:hbm@[1.0.27,);required-after:Forge@[10.13.2,);after:magcore")
 
@@ -46,8 +46,9 @@ public class HBMAddon {
     public void postInit(FMLPostInitializationEvent evt) {
         proxy.postInit(evt);
         if(libLoaded) {
-            Commands.addVersionMessage(MODNAME, VERSION);
-            Commands.addReloadControl(MODNAME ,new HA.Loader());
+            new VersionProvider();
+            //Commands.addVersionMessage(MODNAME, VERSION);
+            //Commands.addReloadControl(MODNAME ,new HA.Loader());
         }
     }
 

@@ -25,7 +25,7 @@ public class FluidAdder extends Fluids {
             namespace.add(model.name);
         }
     }
-    
+
     public static void reBuild(){
         for(Storage.Model model:Storage.storage){
             if(namespace.contains(model.name)&& Fluids.fromName(model.name) instanceof OuterTextureFluid){
@@ -38,7 +38,7 @@ public class FluidAdder extends Fluids {
             }
         }
     }
-    
+
 
     static class OuterTextureFluid extends FluidType{
         ResourceLocation newLocation;
@@ -61,11 +61,11 @@ public class FluidAdder extends Fluids {
         public int getColor() {
             return this.color;
         }
-        
+
         public void setColor(int color){
             this.color=color;
         }
-        
+
         public void setColor(int[] rgb){
             this.color=rgb[0]<<16|rgb[1]<<8|rgb[2];
         }

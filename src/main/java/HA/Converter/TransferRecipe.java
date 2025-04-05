@@ -33,7 +33,7 @@ public class TransferRecipe {
     }
 
     public static void Construct() {
-        recipeMap.put(null, null);
+        //recipeMap.put(null, null);
         for (RecipeContainer container : storage) {
             recipeMap.put(container.getInput(), container.getOutput());
         }

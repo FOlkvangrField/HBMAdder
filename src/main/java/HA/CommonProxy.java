@@ -4,11 +4,15 @@ import HA.Config.Config;
 import HA.Converter.ConverterBlock;
 import HA.Converter.TransferRecipe;
 import HA.Fluiddder.FluidAdder;
+import HA.Fluiddder.ForgeFluidAdder;
+import com.hbm.inventory.fluid.Fluids;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStoppingEvent;
+import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.block.Block;
+
 
 public class CommonProxy {
     Block transfer;
@@ -19,12 +23,19 @@ public class CommonProxy {
         new Event();
         Loader.setFolder(event.getModConfigurationDirectory());
         transfer = new ConverterBlock();
+
+        /*for(Block block : fluidBlocks){
+            GameRegistry.registerBlock(block, block.getUnlocalizedName());
+        }*/
         //counter = new BlockCounter();
     }
 
     public void init(FMLInitializationEvent event) {
+        //Fluids.init();
         Loader.loadFluidFromJson(true);
-        FluidAdder.construct();
+        //FluidAdder.construct();
+        ForgeFluidAdder.construct();
+        ForgeFluidAdder.makeLocalized();
         Loader.loadRecipeFromJson(true);
         TransferRecipe.Construct();
     }

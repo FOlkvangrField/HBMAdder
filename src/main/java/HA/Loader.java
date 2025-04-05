@@ -2,7 +2,6 @@ package HA;
 
 import HA.Config.Config;
 import HA.Converter.TransferRecipe;
-import HA.Fluiddder.FluidAdder;
 import HA.Fluiddder.Storage;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -11,7 +10,6 @@ import cpw.mods.fml.common.registry.LanguageRegistry;
 import net.minecraft.util.StatCollector;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
-import ventivu.api.IReload;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -22,8 +20,8 @@ import java.util.List;
 import static HA.jsonHelper.JsonReads;
 import static HA.jsonHelper.creatFile;
 
-@Optional.Interface(iface = "ventivu.api.IReload", modid = "magcore")
-public class Loader implements IReload {
+//@Optional.Interface(iface = "ventivu.core.Core.Commands.IReloadable", modid = "magcore")
+public class Loader {
     static HashMap<String, String> en_USnames = new HashMap<>(), zh_CNnames = new HashMap<>();
     static Gson gson = new GsonBuilder().setPrettyPrinting().create();
     private static final String Fluids = "HAFluids", Recipes = "HARecipes";
@@ -105,7 +103,7 @@ public class Loader implements IReload {
         creatFile(Fluids, gson.toJson(list.toArray()));
     }
 
-    @Override
+    /*@Override
     @Optional.Method(modid = "magcore")
     public void reload() {
         Storage.storage.clear();
@@ -114,5 +112,6 @@ public class Loader implements IReload {
         loadRecipeFromJson(true);
         FluidAdder.reBuild();
         TransferRecipe.Construct();
-    }
+    }*/
+
 }
