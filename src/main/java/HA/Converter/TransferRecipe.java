@@ -24,6 +24,14 @@ public class TransferRecipe {
                 list.add(new RecipeContainer(name,Fluids.SCHRABIDIC.getName()));
                 continue;
             }
+            if(name.equals("mud_fluid")) {
+                list.add(new RecipeContainer(name,Fluids.WATZ.getName()));
+                continue;
+            }
+            if(name.equals("sulfuric_acid_fluid")) {
+                list.add(new RecipeContainer(name,Fluids.SULFURIC_ACID.getName()));
+                continue;
+            }
             if (Fluids.fromName(Hname) != Fluids.NONE || Fluids.fromName(name) != Fluids.NONE) {
 
                 list.add(new RecipeContainer(name,Fluids.fromName(Hname) == Fluids.NONE?name:Hname));

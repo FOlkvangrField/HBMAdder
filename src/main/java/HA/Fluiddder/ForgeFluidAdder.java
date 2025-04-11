@@ -1,6 +1,7 @@
 package HA.Fluiddder;
 
 import HA.Blocks.ForgeFluid;
+import HA.HBMAddon;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -8,6 +9,7 @@ import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.lib.RefStrings;
 import com.hbm.main.MainRegistry;
+import com.hbm.render.util.EnumSymbol;
 import cpw.mods.fml.common.registry.LanguageRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.MapColor;
@@ -30,25 +32,26 @@ import java.util.concurrent.ForkJoinPool;
 public class ForgeFluidAdder extends Fluids {
     static HashMap<String, String> en_USnames = new HashMap<>(), zh_CNnames = new HashMap<>();
     public static List<Fluid> forgeFluids = new ArrayList();
-    //public static List<FluidType> hbmFluids = metaOrder;
+    static List<String> namespace=new ArrayList<>();
     private IIcon icon;
     public static Map<String, Fluid> forgecache = FluidRegistry.getRegisteredFluids();
+    public static List<FluidType> hbmFluidsType = metaOrder;
     public static void construct(){
-
-        //Minecraft.getMinecraft().getTextureMapBlocks().registerIcon("HA:textures/blocks/custom_water.png");//.setTextureEntry("HA:textures/blocks/custom_water.png",new ForgeFluidIcon("HA:textures/blocks/custom_water.png"));
-        //Minecraft.getMinecraft().getTextureManager().bindTexture(new ResourceLocation("HA:textures/blocks/custom_water.png"));
-        //TextureAtlasSprite sprite = Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite("HA:textures/blocks/custom_water.png");
-        for(FluidType type : metaOrder){
-            if(forgecache.get(type.getName().toLowerCase())==null&&type!=Fluids.NONE){
-                //this.icon = map.registerIcon(this.type.getTexture().toString());
-                Fluid fluid = new NewForgeFluid(type.getName().toLowerCase()).setTemperature(type.temperature).setUnlocalizedName(type.getName().toLowerCase());
-                //IIcon stillIcon = ForgeFluidIcon.getIcon(type);//.createColoredIcon("HA:textures/blocks/custom_water.png", type.getColor()); // 灰度图 + 颜色
-                //fluid.setIcons(stillIcon,stillIcon);
-
-                forgeFluids.add(fluid);
-
+        for(int a=0;a<Storage.hbmStorage.size();a++){
+            Storage.hbmModel model=Storage.hbmStorage.get(a);
+            if(namespace.contains(model.name)) {
+                System.out.println("Duplicate name: " + model.name);
+                continue;
             }
+            Fluid fluid = new NewForgeFluid(model.name).setTemperature(model.temperature).setUnlocalizedName(model.name);
+            forgeFluids.add(fluid);
         }
+        /*for(FluidType type : hbmFluidsType){
+            if(forgecache.get(type.getName().toLowerCase())==null&&type!=Fluids.NONE){
+                Fluid fluid = new NewForgeFluid(type.getName().toLowerCase()).setTemperature(type.temperature).setUnlocalizedName(type.getName().toLowerCase());
+                forgeFluids.add(fluid);
+            }
+        }*/
         for(Fluid forgeFluid : forgeFluids){
             FluidRegistry.registerFluid(forgeFluid);
             //Block block = new ForgeFluid(forgeFluid,new MaterialLiquid(MapColor.airColor),forgeFluid.getName()).setBlockName(forgeFluid.getName() + "_block");
@@ -64,7 +67,10 @@ public class ForgeFluidAdder extends Fluids {
 
             //if (fluid == null|| en_USnames.containsKey(unlocal)) continue;
             //String temp = fluid.getUnlocalizedName();
-            if (StatCollector.canTranslate(hbmUnlocal)) {
+            if (hbmFluid.customFluid) {
+                en_USnames.put(forgeUnlocal, hbmFluid.getLocalizedName());
+                zh_CNnames.put(forgeUnlocal, hbmFluid.getLocalizedName());
+            } else if (StatCollector.canTranslate(hbmUnlocal)) {
                 en_USnames.put(forgeUnlocal, LanguageRegistry.instance().getStringLocalization(hbmUnlocal, "en_US"));
                 zh_CNnames.put(forgeUnlocal, LanguageRegistry.instance().getStringLocalization(hbmUnlocal, "zh_CN"));
             } else {

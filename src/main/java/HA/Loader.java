@@ -5,6 +5,7 @@ import HA.Converter.TransferRecipe;
 import HA.Fluiddder.Storage;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.hbm.inventory.fluid.Fluids;
 import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.common.registry.LanguageRegistry;
 import net.minecraft.util.StatCollector;
@@ -24,7 +25,7 @@ import static HA.jsonHelper.creatFile;
 public class Loader {
     static HashMap<String, String> en_USnames = new HashMap<>(), zh_CNnames = new HashMap<>();
     static Gson gson = new GsonBuilder().setPrettyPrinting().create();
-    private static final String Fluids = "HAFluids", Recipes = "HARecipes";
+    private static final String Fluids = "HAFluids",forgeFluids = "HAForgeFluids", Recipes = "HARecipes";
 
     public static void setFolder(File folder) {
         jsonHelper.setFolder(folder);
@@ -53,9 +54,32 @@ public class Loader {
         Storage.storage.addAll((list));
         makeLocalized(list);
     }
+    public static void loadHbmFluidFromJson(Boolean first) {
+        if (Config.alwaysRefreshFluid && !Config.needRefreshFluid) Config.set(Config.aFluid, false);
+        String json = JsonReads(forgeFluids);
+        if (json == null || Config.needRefreshFluid) {
+            //json =
+            creatFile(forgeFluids, gson.toJson(Storage.hbm_sample()));
+            if (Config.needRefreshFluid) Config.needRefreshFluid = false;
+            if (first) loadHbmFluidFromJson(false);
+            return;
+        }
+        Storage.hbmModel[] models = gson.fromJson(json, Storage.hbmModel[].class);
 
+        List<Storage.hbmModel> list = new ArrayList<>();
+        boolean needRefresh = false;
+
+        if (Config.allcustomMode) list = Arrays.asList(models);
+        else for (Storage.hbmModel model : models) {
+            if (com.hbm.inventory.fluid.Fluids.fromName(model.name.toUpperCase()) != null) list.add(model);
+            else needRefresh = true;
+        }
+        if (!Config.allcustomMode && needRefresh) creatFile(forgeFluids, gson.toJson(list.toArray()));
+        Storage.hbmStorage.addAll((list));
+        //makeLocalized(list);
+    }
     public static void loadRecipeFromJson(boolean first) {
-        if (Config.alwaysRefreshRecipe && !Config.needRefreshRecipe) Config.set(Config.nRecipe, false);
+        if (Config.alwaysRefreshRecipe && !Config.needRefreshRecipe) Config.set(Config.nRecipe, true);
         String json = JsonReads(Recipes);
         if (json == null || Config.needRefreshRecipe) {
             creatFile(Recipes, gson.toJson(TransferRecipe.sample()));

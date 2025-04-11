@@ -1,6 +1,7 @@
 package HA.Fluiddder;
 
 import HA.HBMAddon;
+import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.Fluid;
@@ -10,8 +11,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import static HA.Fluiddder.ForgeFluidAdder.hbmFluidsType;
+
 public class Storage {
     public static final List<Model> storage = new ArrayList<>();
+    public static final List<hbmModel> hbmStorage = new ArrayList<>();
 
     public static Model[] sample() {
         List<Model> list = new ArrayList<>();
@@ -43,7 +47,18 @@ public class Storage {
         }
         return list.toArray(new Model[0]);
     }
-
+    public static hbmModel[] hbm_sample() {
+        List<hbmModel> list = new ArrayList<>();
+        Map<String, Fluid> forgecache = FluidRegistry.getRegisteredFluids();
+        for(FluidType type : hbmFluidsType){
+            String hbmName = type.getName();
+            String forgeName = type.getName().toLowerCase();
+            if(type!=Fluids.NONE&&type!=Fluids.SCHRABIDIC&&type!=Fluids.WATZ&&type!=Fluids.SULFURIC_ACID){
+                list.add(new hbmModel(forgeName,type.temperature));
+            }
+        }
+        return list.toArray(new hbmModel[0]);
+    }
     public static class Model {
         public String name;
         public int poison, flammability, reactivity;
@@ -67,7 +82,14 @@ public class Storage {
             this.reactivity = reactivity;
         }
     }
-
+    public static class hbmModel {
+        public String name;
+        public int temperature;
+        public hbmModel(String name, int temperature) {
+            this.name = name;
+            this.temperature = temperature;
+        }
+    }
     public static class TexturedModel extends Model {
         public ResourceLocation resourceLocation;
 

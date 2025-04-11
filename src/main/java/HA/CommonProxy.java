@@ -32,8 +32,9 @@ public class CommonProxy {
 
     public void init(FMLInitializationEvent event) {
         //Fluids.init();
-        Loader.loadFluidFromJson(true);
+        //Loader.loadFluidFromJson(true);
         //FluidAdder.construct();
+        Loader.loadHbmFluidFromJson(true);
         ForgeFluidAdder.construct();
         ForgeFluidAdder.makeLocalized();
         Loader.loadRecipeFromJson(true);
