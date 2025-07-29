@@ -21,7 +21,6 @@ public class ForgeFluidAdder extends Fluids {
     public static List<Fluid> forgeFluids = new ArrayList();
     static List<String> namespace=new ArrayList<>();
 
-    public static Map<String, Fluid> forgecache = FluidRegistry.getRegisteredFluids();
     public static List<FluidType> hbmFluidsType = metaOrder;
     public static void construct(){
         for(int a=0;a<Storage.hbmStorage.size();a++){
@@ -33,15 +32,7 @@ public class ForgeFluidAdder extends Fluids {
             Fluid forgeFluid = new NewForgeFluid(model.name,model.hasBlock).setTemperature(model.temperature).setUnlocalizedName(model.name);
 
             forgeFluids.add(forgeFluid);
-
-            //Block fluidBlock = new ForgeFluidBlocks(fluid,new MaterialLiquid(MapColor.purpleColor),model.name);
         }
-        /*for(FluidType type : hbmFluidsType){
-            if(forgecache.get(type.getName().toLowerCase())==null&&type!=Fluids.NONE){
-                Fluid fluid = new NewForgeFluid(type.getName().toLowerCase()).setTemperature(type.temperature).setUnlocalizedName(type.getName().toLowerCase());
-                forgeFluids.add(fluid);
-            }
-        }*/
         for(Fluid forgeFluid : forgeFluids){
             FluidType hbmFluid = Fluids.fromName(forgeFluid.getName().toUpperCase());
             Material material = new MaterialLiquid(MapColor.brownColor);
@@ -70,8 +61,9 @@ public class ForgeFluidAdder extends Fluids {
                 GameRegistry.registerBlock(fluidBlock, fluidBlock.getUnlocalizedName());
             }
         }
+        makeLocalized(forgeFluids);
     }
-    public static void makeLocalized() {
+    public static void makeLocalized(List<Fluid> forgeFluids) {
         for (Fluid addedForgeFluid : forgeFluids) {
             //BufferedImage
             String forgeUnlocal = addedForgeFluid.getUnlocalizedName();
@@ -81,8 +73,6 @@ public class ForgeFluidAdder extends Fluids {
             if (((NewForgeFluid) addedForgeFluid).hasBlock) {
                 blockUnlocal = addedForgeFluid.getBlock().getUnlocalizedName();
             }
-                //if (fluid == null|| en_USnames.containsKey(unlocal)) continue;
-                //String temp = fluid.getUnlocalizedName();
             if (hbmFluid.renderWithTint) {
                 en_USnames.put(forgeUnlocal, hbmFluid.getLocalizedName());
                 zh_CNnames.put(forgeUnlocal, hbmFluid.getLocalizedName());
