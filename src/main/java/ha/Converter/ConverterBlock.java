@@ -1,23 +1,15 @@
-package HA.Converter;
+package ha.Converter;
 
-import HA.Fluiddder.Storage;
-import HA.HBMAddon;
+import ha.HBMAddon;
 import api.hbm.block.IToolable;
 import com.hbm.blocks.ILookOverlay;
 import com.hbm.blocks.ITooltipProvider;
 import com.hbm.inventory.fluid.FluidType;
-import com.hbm.inventory.fluid.trait.FluidTraitSimple;
-import com.hbm.lib.RefStrings;
-import com.hbm.render.icon.RGBMutatorInterpolatedComponentRemap;
-import com.hbm.render.icon.TextureAtlasSpriteMutatable;
-import com.hbm.util.I18nUtil;
+import com.hbm.util.i18n.I18nUtil;
 import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.IIconRegister;
-import net.minecraft.client.renderer.texture.TextureMap;
-import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -25,7 +17,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IIcon;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -40,10 +31,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import com.hbm.inventory.fluid.Fluids;
-
-import static HA.Fluiddder.ForgeFluidIcon.ColorEdit;
 
 public class ConverterBlock extends Block implements IToolable, ITooltipProvider, ILookOverlay  {
     IIcon[] top = new IIcon[8], side = new IIcon[8], down = new IIcon[8];
@@ -64,47 +51,8 @@ public class ConverterBlock extends Block implements IToolable, ITooltipProvider
             side[i] = register.registerIcon(HBMAddon.MODID + ":transfer_side." + i);
             down[i] = register.registerIcon(HBMAddon.MODID + ":transfer_down." + i);
         }
-        if(register instanceof TextureMap) {
-            TextureMap map = (TextureMap) register;
-            for(int a = 0; a< Storage.hbmStorage.size(); a++) {
-                Storage.hbmModel model = Storage.hbmStorage.get(a);
-                FluidType fluid = Fluids.fromName(model.name.toUpperCase());
-                if (fluid != Fluids.NONE) {
-                    boolean iiconLocation = doesTextureExist("/assets/ha/textures/blocks/" + fluid.getName().toLowerCase() + "_still.png");
-                    String name;
-                    if(!iiconLocation){
-                        RGBMutatorInterpolatedComponentRemap iconColor = new RGBMutatorInterpolatedComponentRemap(0xFFFFFF, 0x505050, ColorEdit(fluid.getColor(), 1.5), ColorEdit(fluid.getColor(), 0.5));
-                        name = "HA:custom_water-";
-                        TextureAtlasSpriteMutatable mutatableIcon = new TextureAtlasSpriteMutatable(name + fluid.getName().toLowerCase(), iconColor).setBlockAtlas();
-                        if (fluid.hasTrait(FluidTraitSimple.FT_Viscous.class)) {
-                            name = "HA:custom_oil-";
-                            mutatableIcon = new TextureAtlasSpriteMutatable(name + fluid.getName().toLowerCase(), iconColor).setBlockAtlas();
-                        }
-                        if (fluid.temperature > 1000 || fluid.hasTrait(FluidTraitSimple.FT_Amat.class) || fluid.hasTrait(FluidTraitSimple.FT_Plasma.class)) {
-                            name = "HA:custom_lava-";
-                            mutatableIcon = new TextureAtlasSpriteMutatable(name + fluid.getName().toLowerCase(), iconColor).setBlockAtlas();
-                        }
-                        map.setTextureEntry(name + fluid.getName().toLowerCase(), mutatableIcon);
-                        iconMap.put(fluid.getName().toLowerCase(),mutatableIcon);
-                    }
-                    else {
-                        IIcon icon = register.registerIcon("HA:" + fluid.getName().toLowerCase() + "_still");
-                        iconMap.put(fluid.getName().toLowerCase(),icon);
-                    }
-                }
-            }
-        }
     }
-    public boolean doesTextureExist(String res) {
-        InputStream stream = this.getClass().getResourceAsStream(res);
-        boolean has = stream != null;
-        try {
-            if (stream != null) stream.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return has;
-    }
+
     @Override
     public IIcon getIcon(int side, int meta) {
         switch (ForgeDirection.getOrientation(side)) {

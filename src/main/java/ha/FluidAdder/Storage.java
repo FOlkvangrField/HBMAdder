@@ -1,6 +1,6 @@
-package HA.Fluiddder;
+package ha.FluidAdder;
 
-import HA.HBMAddon;
+import ha.HBMAddon;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
 import net.minecraft.util.ResourceLocation;
@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static HA.Fluiddder.ForgeFluidAdder.hbmFluidsType;
+import static ha.FluidAdder.ForgeFluidAdder.hbmFluidsType;
 
 public class Storage {
     public static final List<Model> storage = new ArrayList<>();
@@ -54,7 +54,7 @@ public class Storage {
             String hbmName = type.getName();
             String forgeName = type.getName().toLowerCase();
             if(type!=Fluids.NONE&&type!=Fluids.SCHRABIDIC&&type!=Fluids.WATZ&&type!=Fluids.SULFURIC_ACID){
-                list.add(new hbmModel(forgeName,type.temperature));
+                list.add(new hbmModel(forgeName,type.temperature,false));
             }
         }
         return list.toArray(new hbmModel[0]);
@@ -85,9 +85,11 @@ public class Storage {
     public static class hbmModel {
         public String name;
         public int temperature;
-        public hbmModel(String name, int temperature) {
+        public boolean hasBlock;
+        public hbmModel(String name, int temperature, boolean hasBlock) {
             this.name = name;
             this.temperature = temperature;
+            this.hasBlock = hasBlock;
         }
     }
     public static class TexturedModel extends Model {

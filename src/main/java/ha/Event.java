@@ -1,6 +1,6 @@
-package HA;
+package ha;
 
-import HA.Config.Config;
+import ha.Config.Config;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent;

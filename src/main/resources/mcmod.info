@@ -1,6 +1,6 @@
 [
 {
-  "modid": "HA",
+  "modid": "ha",
   "name": "HBMaddon",
   "description": "compact for HBM",
   "version": "${version}",
@@ -8,7 +8,7 @@
   "logoFile": "G9.png",
   "url": "",
   "updateUrl": "",
-  "authorList": ["Ventivu"],
+  "authorList": ["Ventivu","Nukesteve"],
   "credits": "",
   "parent": "",
   "screenshots": [],

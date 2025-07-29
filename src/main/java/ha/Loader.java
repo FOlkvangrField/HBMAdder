@@ -1,12 +1,10 @@
-package HA;
+package ha;
 
-import HA.Config.Config;
-import HA.Converter.TransferRecipe;
-import HA.Fluiddder.Storage;
+import ha.Config.Config;
+import ha.Converter.TransferRecipe;
+import ha.FluidAdder.Storage;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.hbm.inventory.fluid.Fluids;
-import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.common.registry.LanguageRegistry;
 import net.minecraft.util.StatCollector;
 import net.minecraftforge.fluids.Fluid;
@@ -18,8 +16,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
-import static HA.jsonHelper.JsonReads;
-import static HA.jsonHelper.creatFile;
+import static ha.jsonHelper.JsonReads;
+import static ha.jsonHelper.creatFile;
 
 //@Optional.Interface(iface = "ventivu.core.Core.Commands.IReloadable", modid = "magcore")
 public class Loader {

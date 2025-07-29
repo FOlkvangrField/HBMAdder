@@ -1,6 +1,6 @@
-package HA.Fluiddder;
+package ha.FluidAdder;
 
-import HA.Loader;
+import ha.Loader;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.resources.IResource;

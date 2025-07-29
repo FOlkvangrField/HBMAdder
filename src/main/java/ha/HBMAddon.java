@@ -1,4 +1,4 @@
-package HA;
+package ha;
 
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Loader;
@@ -12,18 +12,17 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStoppingEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import ventivu.core.Core.Commands.CommandReload;
 
 @Mod(modid = HBMAddon.MODID, name = HBMAddon.MODNAME, version = HBMAddon.VERSION, dependencies = "required-after:hbm@[1.0.27,);required-after:Forge@[10.13.2,);after:magcore")
 
 public class HBMAddon {
 
-    public static final String MODID = "HA";
+    public static final String MODID = "ha";
     public static final String MODNAME = "HBMAddon";
-    public static final String VERSION = "0.0.7.1";
+    public static final String VERSION = "0.0.7.2";
     public static boolean libLoaded=false;
 
-    @SidedProxy(clientSide = "HA.ClientProxy", serverSide = "HA.CommonProxy")
+    @SidedProxy(clientSide = "ha.ClientProxy", serverSide = "ha.CommonProxy")
     public static CommonProxy proxy;
 
     @Instance(value = HBMAddon.MODID)
@@ -48,7 +47,7 @@ public class HBMAddon {
         if(libLoaded) {
             new VersionProvider();
             //Commands.addVersionMessage(MODNAME, VERSION);
-            //Commands.addReloadControl(MODNAME ,new HA.Loader());
+            //Commands.addReloadControl(MODNAME ,new ha.Loader());
         }
     }
 

@@ -1,16 +1,13 @@
-package HA;
+package ha;
 
-import HA.Config.Config;
-import HA.Converter.ConverterBlock;
-import HA.Converter.TransferRecipe;
-import HA.Fluiddder.FluidAdder;
-import HA.Fluiddder.ForgeFluidAdder;
-import com.hbm.inventory.fluid.Fluids;
+import ha.Config.Config;
+import ha.Converter.ConverterBlock;
+import ha.Converter.TransferRecipe;
+import ha.FluidAdder.ForgeFluidAdder;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStoppingEvent;
-import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.block.Block;
 
 

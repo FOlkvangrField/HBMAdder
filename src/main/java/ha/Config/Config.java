@@ -1,4 +1,4 @@
-package HA.Config;
+package ha.Config;
 
 import net.minecraft.util.StatCollector;
 import net.minecraftforge.common.config.Configuration;
@@ -78,7 +78,7 @@ public class Config extends Configuration{
             builder.append(ss);
             builder.append("\n");
         }
-        builder.delete(builder.length()-2,builder.length());
+        builder.delete(builder.length()-1,builder.length());
         return builder.toString();
     }
 }

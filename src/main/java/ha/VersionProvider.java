@@ -1,15 +1,13 @@
-package HA;
+package ha;
 
-import HA.Converter.TransferRecipe;
-import HA.Fluiddder.FluidAdder;
-import HA.Fluiddder.Storage;
-import cpw.mods.fml.common.Optional;
+import ha.Converter.TransferRecipe;
+import ha.FluidAdder.Storage;
 import ventivu.core.Core.Commands.AbstractAutoRegister;
 import ventivu.core.Core.Commands.IReloadable;
 import ventivu.core.Core.Commands.IVersionProvider;
 
-import static HA.Loader.loadFluidFromJson;
-import static HA.Loader.loadRecipeFromJson;
+import static ha.Loader.loadFluidFromJson;
+import static ha.Loader.loadRecipeFromJson;
 
 public class VersionProvider extends AbstractAutoRegister implements IVersionProvider, IReloadable {
     @Override

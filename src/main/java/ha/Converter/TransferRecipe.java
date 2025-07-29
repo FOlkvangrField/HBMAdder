@@ -1,4 +1,4 @@
-package HA.Converter;
+package ha.Converter;
 
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;

@@ -1,6 +1,6 @@
-package HA.Fluiddder;
+package ha.FluidAdder;
 
-import HA.HBMAddon;
+import ha.HBMAddon;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.render.util.EnumSymbol;

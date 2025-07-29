@@ -1,7 +1,6 @@
-package HA;
+package ha;
 
-import HA.Fluiddder.FluidColor;
-import HA.Fluiddder.ForgeFluidIcon;
+import ha.FluidAdder.FluidColor;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;

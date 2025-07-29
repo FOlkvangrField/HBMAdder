@@ -1,22 +1,20 @@
-package HA.Converter;
+package ha.Converter;
 
-import api.hbm.fluid.*;
+import api.hbm.fluidmk2.IFluidStandardTransceiverMK2;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.lib.Library;
 import com.hbm.tileentity.IBufPacketReceiver;
 import com.hbm.tileentity.TileEntityLoadedBase;
 import com.hbm.util.fauxpointtwelve.DirPos;
-import com.hbm.tileentity.network.TileEntityPipeBaseNT;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.*;
 
 import java.util.*;
 
-public class TileConverter extends TileEntityLoadedBase implements IBufPacketReceiver,IFluidHandler, IFluidStandardTransceiver{
+public class TileConverter extends TileEntityLoadedBase implements IBufPacketReceiver,IFluidHandler, IFluidStandardTransceiverMK2 {
     static final int[] speed = new int[]{100, 500, 1000, 3000, 5000, 8000, 10000, -1};
     static final int[] capacity = new int[]{1000, 2000, 4000, 6000, 10000, 20000, 50000, Integer.MAX_VALUE};
     public short mode = 0;
@@ -30,9 +28,6 @@ public class TileConverter extends TileEntityLoadedBase implements IBufPacketRec
         if (level > 7) level = 7;
         forgefluidtank = new FluidTank(capacity[level]);
         hbmfluidtank = new com.hbm.inventory.fluid.tank.FluidTank(Fluids.NONE, capacity[level]);
-    }
-    public TileConverter() {
-        this(0); // 调用原有构造函数并设置默认等级
     }
     @Override
     public int fill(ForgeDirection from, FluidStack resource, boolean doFill) {
@@ -115,14 +110,14 @@ public class TileConverter extends TileEntityLoadedBase implements IBufPacketRec
         if(!worldObj.isRemote) {
             int a = getBlockMetadata();
             age = age >= 20 ? 0 : age + 1;
-            unsubscribeToAllAround(hbmfluidtank.getTankType(), this);
+            //unsubscribeToAllAround(hbmfluidtank.getTankType(), this);
             if (age == 0) {
                 switch (this.mode) {
                     case 0://forge->hbm
-                        TileEntity tile = worldObj.getTileEntity(this.xCoord, this.yCoord - 1, this.zCoord);
+                        /*TileEntity tile = worldObj.getTileEntity(this.xCoord, this.yCoord - 1, this.zCoord);
                         if (tile instanceof TileEntityPipeBaseNT) {
                             hbmfluidtank.setTankType(((TileEntityPipeBaseNT) tile).getType());
-                        }
+                        }*/
                         if (forgefluidtank.getFluid() != null) {
                             FluidType outputFluid = TransferRecipe.recipeMap.get(forgefluidtank.getFluid().getFluid());
                             if (outputFluid != null && (hbmfluidtank.getTankType() == Fluids.NONE || outputFluid == hbmfluidtank.getTankType())) {
@@ -133,7 +128,6 @@ public class TileConverter extends TileEntityLoadedBase implements IBufPacketRec
                                     int free = hbmfluidtank.getMaxFill() - hbmfluidtank.getFill();
                                     forgefluidtank.drain(Math.min(vir, free), true);
                                     hbmfluidtank.setFill(hbmfluidtank.getFill() + Math.min(vir, free));
-                                    //this.output.updateTank(xCoord, yCoord, zCoord, worldObj.provider.dimensionId);
                                 } else {
                                     if (hbmfluidtank.getTankType() == Fluids.NONE)
                                         hbmfluidtank.setTankType(outputFluid);
@@ -143,16 +137,15 @@ public class TileConverter extends TileEntityLoadedBase implements IBufPacketRec
                         }
                         //HBM新版本取消了sendFluidtoAll方法，使用修改后的输送流体方法
                         for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {//查找可用输出方向
-                            //sendfFluid参数为容器流体种类、流体压力、转换器实体位置和方向
-                            this.sendFluid(hbmfluidtank, this.getWorldObj(), this.xCoord + dir.offsetX, this.yCoord + dir.offsetY, this.zCoord + dir.offsetZ, dir);
+                            //tryProvide参数为容器流体种类、流体压力、转换器实体位置和方向
+                            this.tryProvide(hbmfluidtank, this.getWorldObj(), this.xCoord + dir.offsetX, this.yCoord + dir.offsetY, this.zCoord + dir.offsetZ, dir);
                         }
                         break;
                     case 1://hbm->forge
-                        tile = worldObj.getTileEntity(this.xCoord, this.yCoord + 1, this.zCoord);
+                        /*tile = worldObj.getTileEntity(this.xCoord, this.yCoord + 1, this.zCoord);
                         if (tile instanceof TileEntityPipeBaseNT) {
                             hbmfluidtank.setTankType(((TileEntityPipeBaseNT) tile).getType());
-                        }
-                        //output.setFill(transmitFluidFairly(worldObj, output, this, output.getFill(), this.mode == 1, this.mode == 0, getConPos()));
+                        }*/
                         for (DirPos pos : getConPos()) {
                             this.trySubscribe(hbmfluidtank.getTankType(), worldObj, pos);
                         }
@@ -217,58 +210,6 @@ public class TileConverter extends TileEntityLoadedBase implements IBufPacketRec
                 new DirPos(xCoord, yCoord, zCoord - 1, Library.NEG_Z)
         };
     }
-    /*protected static int transmitFluidFairly(World world, com.hbm.inventory.fluid.tank.FluidTank tank, IFluidConnector that, int fill, boolean connect, boolean send, DirPos[] connections) {
-
-        Set<IPipeNet> nets = new HashSet<>();
-        Set<IFluidConnector> consumers = new HashSet<>();
-        FluidType type = tank.getTankType();
-        int pressure = tank.getPressure();
-
-        for(DirPos pos : connections) {
-
-            TileEntity te = world.getTileEntity(pos.getX(), pos.getY(), pos.getZ());
-
-            if(te instanceof IFluidConductor) {
-                IFluidConductor con = (IFluidConductor) te;
-                if(con.getPipeNet(type) != null) {
-                    nets.add(con.getPipeNet(type));
-                    con.getPipeNet(type).unsubscribe(that);
-                    consumers.addAll(con.getPipeNet(type).getSubscribers());
-                }
-
-                //if it's just a consumer, buffer it as a subscriber
-            } else if(te instanceof IFluidConnector) {
-                consumers.add((IFluidConnector) te);
-            }
-        }
-
-        consumers.remove(that);
-
-        if(fill > 0 && send) {
-            List<IFluidConnector> con = new ArrayList<>();
-            con.addAll(consumers);
-
-            con.removeIf(x -> x == null || !(x instanceof TileEntity) || ((TileEntity)x).isInvalid());
-
-            if(PipeNet.trackingInstances == null) {
-                PipeNet.trackingInstances = new ArrayList<>();
-            }
-
-            PipeNet.trackingInstances.clear();
-            nets.forEach(x -> {
-                if(x instanceof PipeNet) PipeNet.trackingInstances.add((PipeNet) x);
-            });
-
-            fill = (int) PipeNet.fairTransfer(con, type, pressure, fill);
-        }
-
-        //resubscribe to buffered nets, if necessary
-        if(connect) {
-            nets.forEach(x -> x.subscribe(that));
-        }
-
-        return fill;
-    }*/
     @Override
     public com.hbm.inventory.fluid.tank.FluidTank[] getAllTanks() {
         return new com.hbm.inventory.fluid.tank.FluidTank[]{hbmfluidtank};

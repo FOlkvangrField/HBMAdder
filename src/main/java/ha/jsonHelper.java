@@ -1,4 +1,4 @@
-package HA;
+package ha;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
