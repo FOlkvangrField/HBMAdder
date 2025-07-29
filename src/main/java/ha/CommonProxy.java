@@ -21,10 +21,6 @@ public class CommonProxy {
         Loader.setFolder(event.getModConfigurationDirectory());
         transfer = new ConverterBlock();
 
-        /*for(Block block : fluidBlocks){
-            GameRegistry.registerBlock(block, block.getUnlocalizedName());
-        }*/
-        //counter = new BlockCounter();
     }
 
     public void init(FMLInitializationEvent event) {
